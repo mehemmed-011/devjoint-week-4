@@ -5,6 +5,7 @@
 
 .hero__container {
   width: 90%;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -242,6 +243,7 @@
 
 .section__container {
   width: 90%;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
