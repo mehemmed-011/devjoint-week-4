@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<h1>Profile</h1>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
