@@ -1,22 +1,10 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 import "./Navbar.css";
 
 function Navbar() {
-  let [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-
-  useEffect(() => {
-    let handleStorageChange = () => {
-      setIsLoggedIn(!!localStorage.getItem("token"));
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
+  let { isAuthenticated } = useAuth();
 
   return (
     <header className="navbar">
@@ -40,7 +28,7 @@ function Navbar() {
         </nav>
 
         <div className="navbar__actions">
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <Link to="/profile" className="navbar__profile">
               Profil
             </Link>

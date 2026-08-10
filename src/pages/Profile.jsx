@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./Profile.css";
 
 function Profile() {
-  let user = JSON.parse(localStorage.getItem("user"));
+  let { user } = useAuth();
 
   let userName = user.name;
   let userEmail = user.email;

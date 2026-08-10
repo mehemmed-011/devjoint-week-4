@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { getUserByEmail } from "../api/authApi";
+import { useAuth } from "../context/AuthContext";
 
 import "./Auth.css";
 
 function Login() {
   let navigate = useNavigate();
+  let { login } = useAuth();
   let [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -71,28 +73,23 @@ function Login() {
 
       if (!user) {
         setServerError("E-poçt və ya şifrə yanlışdır.");
-
         return;
       }
 
       if (user.password !== formData.password) {
         setServerError("E-poçt və ya şifrə yanlışdır.");
-
         return;
       }
 
       let token = `mock-token-${user.id}-${Date.now()}`;
 
-      localStorage.setItem("token", token);
+      let loggedInUser = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      };
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        }),
-      );
+      login(loggedInUser, token);
 
       navigate("/dashboard");
     } catch (error) {

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./Dashboard.css";
 
 let initialTasks = [
@@ -55,6 +56,7 @@ let initialTasks = [
 
 function Dashboard() {
   let navigate = useNavigate();
+  let { logout } = useAuth();
 
   let [tasks, setTasks] = useState(initialTasks);
   let [search, setSearch] = useState("");
@@ -100,7 +102,7 @@ function Dashboard() {
   };
 
   let handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     navigate("/");
   };
 
