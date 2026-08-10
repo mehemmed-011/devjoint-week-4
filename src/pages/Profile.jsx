@@ -2,6 +2,22 @@ import { Link } from "react-router-dom";
 import "./Profile.css";
 
 function Profile() {
+  let user = JSON.parse(localStorage.getItem("user"));
+
+  let userName = user.name;
+  let userEmail = user.email;
+
+  let getInitials = (name) => {
+    return name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+  };
+
+  let initials = getInitials(userName);
+
   return (
     <main className="profile">
       <div className="profile__container">
@@ -16,19 +32,17 @@ function Profile() {
         </div>
 
         <section className="profile__card">
-          <div className="profile__avatar">Mİ</div>
+          <div className="profile__avatar">{initials}</div>
 
           <div className="profile__info">
             <div className="profile__field">
               <span className="profile__label">Ad və soyad</span>
-
-              <strong className="profile__value">Məhəmməd İbrahimli</strong>
+              <strong className="profile__value">{userName}</strong>
             </div>
 
             <div className="profile__field">
               <span className="profile__label">E-poçt</span>
-
-              <strong className="profile__value">example@mail.com</strong>
+              <strong className="profile__value">{userEmail}</strong>
             </div>
 
             <div className="profile__field">
