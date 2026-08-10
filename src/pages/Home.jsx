@@ -28,7 +28,7 @@ function Home() {
               </p>
 
               <div className="hero__actions">
-                <Link to="/signup" className="hero__primary-btn">
+                <Link to="/dashboard" className="hero__primary-btn">
                   İndi başlayın
                 </Link>
 
