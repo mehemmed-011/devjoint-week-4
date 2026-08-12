@@ -1,16 +1,36 @@
 {
   "users": [
     {
-      "name": "Mahammad Ibrahimli",
-      "email": "demo@gmail.com",
-      "password": "12345678",
-      "id": "-VfBuxO38Ms"
-    },
-    {
       "name": "Demo Hesab",
       "email": "demo123@gmail.com",
       "password": "demo1234",
       "id": "vtr2yk45AT4"
+    }
+  ],
+  "tasks": [
+    {
+      "title": "React Tətbiqi",
+      "description": "Tam xüsusiyyətli react tətbiqi qurmaq",
+      "status": "pending",
+      "priority": "high",
+      "dueDate": "2026-08-22",
+      "id": "T3n5H3oy-5w"
+    },
+    {
+      "title": "Search Movie",
+      "description": "Film axtarışı saytı qurmaq",
+      "status": "completed",
+      "priority": "medium",
+      "dueDate": "2026-08-12",
+      "id": "dk9Hafx7A0Y"
+    },
+    {
+      "title": "React-Vite",
+      "description": "React Vite quraşdırmaq",
+      "status": "in-progress",
+      "priority": "low",
+      "dueDate": "2026-08-28",
+      "id": "av81-tlXGgc"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

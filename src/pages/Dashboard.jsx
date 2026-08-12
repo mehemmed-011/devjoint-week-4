@@ -1,68 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getTasks, createTask, updateTask, deleteTask } from "../api/taskApi";
 import { useAuth } from "../context/AuthContext";
 import "./Dashboard.css";
-
-let initialTasks = [
-  {
-    id: 1,
-    title: "Ödəniş xətası düzəlişi",
-    description: "İllik planlar üçün faktura cəmi səhv yuvarlaqlaşdırılıb.",
-    status: "completed",
-    priority: "high",
-    dueDate: "2026-08-06",
-  },
-  {
-    id: 2,
-    title: "Dizayn nümunəsi",
-    description: "Portfolio saytı üçün dizayn nümunəsi.",
-    status: "completed",
-    priority: "medium",
-    dueDate: "2026-08-08",
-  },
-  {
-    id: 3,
-    title: "React-Vite",
-    description: "Layihəni işləmək üçün React-Vite qurmaq.",
-    status: "in-progress",
-    priority: "high",
-    dueDate: "2026-08-09",
-  },
-  {
-    id: 4,
-    title: "Responsiv dizayn",
-    description: "Layihənin mobil, tablet, desktop görünüşünü hazırlamaq.",
-    status: "pending",
-    priority: "medium",
-    dueDate: "2026-08-12",
-  },
-  {
-    id: 5,
-    title: "TaskFlow saytı",
-    description: "Tam işlək React tətbiqi qurmaq.",
-    status: "pending",
-    priority: "low",
-    dueDate: "2026-08-16",
-  },
-  {
-    id: 6,
-    title: "Test",
-    description: "Yeni tapşırığın nümunə təsviri.",
-    status: "in-progress",
-    priority: "low",
-    dueDate: "2026-08-20",
-  },
-];
 
 function Dashboard() {
   let navigate = useNavigate();
   let { logout } = useAuth();
-
-  let [tasks, setTasks] = useState(initialTasks);
+  let [tasks, setTasks] = useState([]);
   let [search, setSearch] = useState("");
   let [statusFilter, setStatusFilter] = useState("all");
   let [isModalOpen, setIsModalOpen] = useState(false);
   let [editingTask, setEditingTask] = useState(null);
+  let [loading, setLoading] = useState(true);
+  let [error, setError] = useState("");
   let [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -70,6 +21,27 @@ function Dashboard() {
     priority: "medium",
     dueDate: "",
   });
+
+  useEffect(() => {
+    let loadTasks = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        let data = await getTasks();
+
+        setTasks(data);
+      } catch (error) {
+        console.error(error);
+
+        setError("Tapşırıqları yükləmək mümkün olmadı.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTasks();
+  }, []);
 
   let totalTasks = tasks.length;
 
@@ -79,7 +51,7 @@ function Dashboard() {
     (task) => task.status === "in-progress",
   ).length;
 
-  const completedTasks = tasks.filter(
+  let completedTasks = tasks.filter(
     (task) => task.status === "completed",
   ).length;
 
@@ -88,7 +60,8 @@ function Dashboard() {
       task.title.toLowerCase().includes(search.toLowerCase()) ||
       task.description.toLowerCase().includes(search.toLowerCase());
 
-    let matchesStatus = statusFilter === "all" || task.status === statusFilter;
+    let matchesStatus =
+      statusFilter === "all" || task.status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
@@ -117,6 +90,7 @@ function Dashboard() {
       dueDate: "",
     });
 
+    setError("");
     setIsModalOpen(true);
   };
 
@@ -131,12 +105,21 @@ function Dashboard() {
       dueDate: task.dueDate,
     });
 
+    setError("");
     setIsModalOpen(true);
   };
 
   let closeModal = () => {
     setIsModalOpen(false);
     setEditingTask(null);
+
+    setFormData({
+      title: "",
+      description: "",
+      status: "pending",
+      priority: "medium",
+      dueDate: "",
+    });
   };
 
   let handleChange = (e) => {
@@ -148,7 +131,7 @@ function Dashboard() {
     }));
   };
 
-  let handleSubmit = (e) => {
+  let handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.title.trim()) {
@@ -159,31 +142,74 @@ function Dashboard() {
       return;
     }
 
-    if (editingTask) {
-      setTasks((prev) =>
-        prev.map((task) =>
-          task.id === editingTask.id
-            ? {
-                ...task,
-                ...formData,
-              }
-            : task,
-        ),
+    try {
+      setError("");
+
+      if (editingTask) {
+        let previousTasks = tasks;
+
+        let optimisticTask = {
+          ...editingTask,
+          ...formData,
+        };
+
+        setTasks((prev) =>
+          prev.map((task) =>
+            task.id === editingTask.id ? optimisticTask : task,
+          ),
+        );
+
+        closeModal();
+
+        try {
+          let updatedTask = await updateTask(editingTask.id, formData);
+
+          setTasks((prev) =>
+            prev.map((task) =>
+              task.id === editingTask.id ? updatedTask : task,
+            ),
+          );
+        } catch (error) {
+          console.error(error);
+
+          setTasks(previousTasks);
+
+          setError("Tapşırıq yenilənmədi. Zəhmət olmasa yenidən cəhd edin.");
+        }
+      } else {
+        let temporaryId = `temp-${Date.now()}`;
+
+        let optimisticTask = {
+          id: temporaryId,
+          ...formData,
+        };
+
+        setTasks((prev) => [optimisticTask, ...prev]);
+        closeModal();
+        try {
+          let newTask = await createTask(formData);
+
+          setTasks((prev) =>
+            prev.map((task) => (task.id === temporaryId ? newTask : task)),
+          );
+        } catch (error) {
+          console.error(error);
+
+          setTasks((prev) => prev.filter((task) => task.id !== temporaryId));
+          setError("Tapşırıq yaradılmadı. Zəhmət olmasa yenidən cəhd edin.");
+        }
+      }
+    } catch (error) {
+      console.error(error);
+
+      setError(
+        "Əməliyyat zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.",
       );
-    } else {
-      let newTask = {
-        id: Date.now(),
-        ...formData,
-      };
-
-      setTasks((prev) => [newTask, ...prev]);
     }
-
-    closeModal();
   };
 
-  let handleDelete = (id) => {
-    let confirmed = window.confirm(
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm(
       "Bu tapşırığı silmək istədiyinizə əminsiniz?",
     );
 
@@ -191,7 +217,16 @@ function Dashboard() {
       return;
     }
 
+    const previousTasks = tasks;
     setTasks((prev) => prev.filter((task) => task.id !== id));
+    try {
+      setError("");
+      await deleteTask(id);
+    } catch (error) {
+      console.error(error);
+      setTasks(previousTasks);
+      setError("Tapşırıq silinmədi. Zəhmət olmasa yenidən cəhd edin.");
+    }
   };
 
   let getStatusText = (status) => {
@@ -237,6 +272,8 @@ function Dashboard() {
               </button>
             </div>
           </section>
+
+          {error && <div className="dashboard__error">{error}</div>}
 
           <section className="dashboard__stats">
             <div className="dashboard__stat">
@@ -318,7 +355,13 @@ function Dashboard() {
           </section>
 
           <section className="dashboard__tasks">
-            {filteredTasks.length > 0 ? (
+            {loading ? (
+              <div className="dashboard__empty">
+                <h2>Yüklənir...</h2>
+
+                <p>Tapşırıqlar yüklənir, zəhmət olmasa gözləyin.</p>
+              </div>
+            ) : filteredTasks.length > 0 ? (
               filteredTasks.map((task) => (
                 <article
                   className={`task-card task-card--${task.priority}`}
