@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
+import Signup from "./features/auth/pages/Signup";
+import Login from "./features/auth/pages/Login";
 import NotFound from "./pages/NotFound";
-import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile";
+import Dashboard from "./features/tasks/pages/Dashboard";
+import Profile from "./features/profile/pages/Profile";
 
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./features/auth/components/ProtectedRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
 import "./components/ErrorBoundary.css";
 

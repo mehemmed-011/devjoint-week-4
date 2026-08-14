@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getTasks, createTask, updateTask, deleteTask } from "../api/taskApi";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../auth/context/AuthContext";
 import "./Dashboard.css";
 
 function Dashboard() {
