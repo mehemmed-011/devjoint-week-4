@@ -6,7 +6,7 @@ import "./Dashboard.css";
 
 function Dashboard() {
   let navigate = useNavigate();
-  let { logout } = useAuth();
+  let { user, logout } = useAuth();
   let [tasks, setTasks] = useState([]);
   let [search, setSearch] = useState("");
   let [statusFilter, setStatusFilter] = useState("all");
@@ -28,7 +28,7 @@ function Dashboard() {
         setLoading(true);
         setError("");
 
-        let data = await getTasks();
+        let data = await getTasks(user.id);
 
         setTasks(data);
       } catch (error) {
@@ -41,7 +41,7 @@ function Dashboard() {
     };
 
     loadTasks();
-  }, []);
+  }, [user.id]);
 
   let totalTasks = tasks.length;
 
@@ -60,8 +60,7 @@ function Dashboard() {
       task.title.toLowerCase().includes(search.toLowerCase()) ||
       task.description.toLowerCase().includes(search.toLowerCase());
 
-    let matchesStatus =
-      statusFilter === "all" || task.status === statusFilter;
+    let matchesStatus = statusFilter === "all" || task.status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
@@ -187,7 +186,10 @@ function Dashboard() {
         setTasks((prev) => [optimisticTask, ...prev]);
         closeModal();
         try {
-          let newTask = await createTask(formData);
+          let newTask = await createTask({
+            ...formData,
+            userId: user.id,
+          });
 
           setTasks((prev) =>
             prev.map((task) => (task.id === temporaryId ? newTask : task)),

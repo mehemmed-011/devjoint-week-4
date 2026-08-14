@@ -1,11 +1,13 @@
 import axios from "axios";
 
-let API_URL = "http://localhost:3000/tasks";
+let API_URL = "https://6a7c97b0a008c10e4cbf9712.mockapi.io/taskflow/api/v1/tasks";
 
-export let getTasks = async () => {
+export let getTasks = async (userId) => {
   let response = await axios.get(API_URL);
 
-  return response.data;
+  let tasks = response.data;
+
+  return tasks.filter((task) => String(task.userId) === String(userId));
 };
 
 export let createTask = async (task) => {
