@@ -161,7 +161,7 @@ function Dashboard() {
         closeModal();
 
         try {
-          let updatedTask = await updateTask(editingTask.id, formData);
+          let updatedTask = await updateTask(user.id, editingTask.id, formData);
 
           setTasks((prev) =>
             prev.map((task) =>
@@ -186,7 +186,7 @@ function Dashboard() {
         setTasks((prev) => [optimisticTask, ...prev]);
         closeModal();
         try {
-          let newTask = await createTask({
+          let newTask = await createTask(user.id, {
             ...formData,
             userId: user.id,
           });
@@ -210,8 +210,8 @@ function Dashboard() {
     }
   };
 
-  const handleDelete = async (id) => {
-    const confirmed = window.confirm(
+  let handleDelete = async (id) => {
+    let confirmed = window.confirm(
       "Bu tapşırığı silmək istədiyinizə əminsiniz?",
     );
 
@@ -219,11 +219,11 @@ function Dashboard() {
       return;
     }
 
-    const previousTasks = tasks;
+    let previousTasks = tasks;
     setTasks((prev) => prev.filter((task) => task.id !== id));
     try {
       setError("");
-      await deleteTask(id);
+      await deleteTask(user.id, id);
     } catch (error) {
       console.error(error);
       setTasks(previousTasks);
