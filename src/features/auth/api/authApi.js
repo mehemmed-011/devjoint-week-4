@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let API_URL = "https://6a7c97b0a008c10e4cbf9712.mockapi.io/taskflow/api/v1/users";
+let API_URL = `${import.meta.env.VITE_API_URL}/users`;
 
 export let getUserByEmail = async (email) => {
   let response = await axios.get(API_URL);
