@@ -150,7 +150,7 @@
 }
 
 .auth__server-error {
-  margin-bottom: 18px;
+  margin-top: 10px;
   padding: 11px 13px;
   background: #fef2f2;
   color: #dc2626;

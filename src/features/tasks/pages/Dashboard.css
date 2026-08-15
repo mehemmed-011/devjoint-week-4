@@ -494,6 +494,15 @@
   background: #1d4ed8;
 }
 
+.error__messaage{
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 @media (min-width: 601px) {
   .dashboard {
     padding: 45px 0 100px;

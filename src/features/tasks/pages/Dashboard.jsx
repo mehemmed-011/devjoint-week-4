@@ -34,7 +34,7 @@ function Dashboard() {
       } catch (error) {
         console.error(error);
 
-        setError("Tapşırıqları yükləmək mümkün olmadı.");
+        setError(<p className="error__messaage">Tapşırıqları yükləmək mümkün olmadı.</p>);
       } finally {
         setLoading(false);
       }
@@ -173,7 +173,7 @@ function Dashboard() {
 
           setTasks(previousTasks);
 
-          setError("Tapşırıq yenilənmədi. Zəhmət olmasa yenidən cəhd edin.");
+          setError(<p className="error__messaage">Tapşırıq yenilənmədi. Zəhmət olmasa yenidən cəhd edin.</p>);
         }
       } else {
         let temporaryId = `temp-${Date.now()}`;
@@ -198,15 +198,13 @@ function Dashboard() {
           console.error(error);
 
           setTasks((prev) => prev.filter((task) => task.id !== temporaryId));
-          setError("Tapşırıq yaradılmadı. Zəhmət olmasa yenidən cəhd edin.");
+          setError(<p className="error__messaage">Tapşırıq yaradılmadı. Zəhmət olmasa yenidən cəhd edin.</p>);
         }
       }
     } catch (error) {
       console.error(error);
 
-      setError(
-        "Əməliyyat zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.",
-      );
+      setError(<p className="error__messaage">Əməliyyat zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.</p>);
     }
   };
 
@@ -227,7 +225,7 @@ function Dashboard() {
     } catch (error) {
       console.error(error);
       setTasks(previousTasks);
-      setError("Tapşırıq silinmədi. Zəhmət olmasa yenidən cəhd edin.");
+      setError(<p className="error__messaage">Tapşırıq silinmədi. Zəhmət olmasa yenidən cəhd edin.</p>);
     }
   };
 
