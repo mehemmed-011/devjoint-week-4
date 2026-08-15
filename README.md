@@ -234,7 +234,8 @@ Dashboard açıldıqda **yalnız daxil olmuş istifadəçinin** `userId`-sinə u
   "status": "pending",
   "priority": "high",
   "dueDate": "2026-08-29",
-  "userId": "1"
+  "userId": "1",
+  "id": "1"
 }
 ```
 
@@ -246,7 +247,8 @@ Dashboard açıldıqda **yalnız daxil olmuş istifadəçinin** `userId`-sinə u
   "status": "in-progress",
   "priority": "medium",
   "dueDate": "2026-08-30",
-  "userId": "2"
+  "userId": "2",
+  "id": "2"
 }
 ```
 
@@ -264,7 +266,7 @@ Frontend-də isə bunlar aşağıdakı kimi göstərilir:
 
 | API Dəyəri | Interfeysdə Nümayişi |
 | :--- | :--- |
-| `pending` | 🟡 **GÖZLƏNİLİR** |
+| `pending` | 🟠 **GÖZLƏNİLİR** |
 | `in-progress` | 🔵 **DAVAM EDİR** |
 | `completed` | 🟢 **TAMAMLANDI** |
 
@@ -283,8 +285,8 @@ Frontend-də isə bunlar aşağıdakı kimi göstərilir:
 | API Dəyəri | Interfeysdə Nümayişi |
 | :--- | :--- |
 | `high` | 🔴 **Yüksək** |
-| `medium` | 🟠 **Orta** |
-| `low` | 🔵 **Aşağı** |
+| `medium` | 🟡 **Orta** |
+| `low` | 🟢 **Aşağı** |
 
 ---
 
